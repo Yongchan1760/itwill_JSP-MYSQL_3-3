@@ -1,7 +1,10 @@
 package sec01.ex01;
 
 import java.sql.*;
+
+
 import java.util.ArrayList;
+
 
 //오라클 DBMS의 테이블과 연결 하여 작업할 클래스 
 public class MemberDAO {
@@ -18,7 +21,7 @@ public class MemberDAO {
 	//ojdbc6.jar파일 내부에 있는 OracleDriver.class 경로 정보
 	private static final String driver = "oracle.jdbc.driver.OracleDriver";
 	//DB에 접속 주소 정보 
-	private static final String url = "jdbc:oralce:thin:@localhost:1521:XE";
+	private static final String url = "jdbc:oracle:thin:@localhost:1521:XE";
 	//DB접속 사용자 아이디
 	private static final String user = "scott";
 	//DB접속 사용자 비밀번호
@@ -58,7 +61,7 @@ public class MemberDAO {
 			
 			
 		}catch(Exception e){
-			System.out.println("DB연결 실패 또는 Statement실행객체 얻기 실패" + e);
+			e.printStackTrace();
 		}	
 	}//connDB메소드 끝
 
@@ -98,28 +101,14 @@ public class MemberDAO {
 				//위에 설정된 MemberVO객체를 다시 ArrayList가변길이배열에 추가해서 저장 시킨다.
 				list.add(vo);
 			}
-			
-		}catch(Exception e){
-			System.out.println("listMembers메소드 내부에서 오류 : " + e);
+			rs.close();
+			stmt.close();
+			con.close();
 		
-		}finally{
-			
-			try {
-				//8.자원해제
-				if(rs != null){//ResultSet객체를 사용하고 있다면
-					//자원해제
-					rs.close();
-				}
-				if(stmt != null){
-					stmt.close();
-				}
-				if(con != null){
-					con.close();
-				}
-			} catch (SQLException e) {
+			} catch (Exception e) {
 				e.printStackTrace();
 			}		
-		}
+		
 		
 		return list; //DB로부터 검색한 회원정보들은 ArrayList배열에 저장되어 있기떄문에
 					 //현재 listMembers메소드를 호출하는 서블릿으로 ArrayList배열 전체를 반환
